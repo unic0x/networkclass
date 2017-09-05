@@ -24,15 +24,15 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-@Author("Wrapped By Jamie John")
+@Author("NetworkClass wrapped By Jamie John")
 @Permissions(values={"android.permission.INTERNET"})
-@Version(0.01f)
+@Version(0.02f)
 @Events(values={"state (response As String), error (response As String)"})
 @ActivityObject
-@ShortName("wrappernet")
+@ShortName("networkclass")
 @DependsOn(values={"jsr305-1.3.9"})
 
-public class wrappernet {
+public class networkclass {
 	private static String eventName;
 	private static BA ba;
 
@@ -57,14 +57,30 @@ public class wrappernet {
    * Listener to update the UI upon connectionclass change.
    */
    public void register() {
+	   //BA.Log("Registered");
     mConnectionClassManager.register(mListener);
   }
   public void remove() {
+	  //BA.Log("Removed");
     mConnectionClassManager.remove(mListener);
   }
   public void BandwidthQuality(){
-	  BA.Log(mConnectionClassManager.getCurrentBandwidthQuality().toString());
+	  //BA.Log(mConnectionClassManager.getCurrentBandwidthQuality().toString());
+	  		  if(ba.subExists(networkclass.eventName + "_state"))
+            {
+		ba.raiseEvent(this,networkclass.eventName + "_state", mConnectionClassManager.getCurrentBandwidthQuality().toString());
+			}
+			else
+			{
+				BA.LogError("event sub does not exist: " + networkclass.eventName);
+			}
   }
+   public void startSampling() {
+	mDeviceBandwidthSampler.startSampling();
+   }
+   public void stopSampling() {
+	mDeviceBandwidthSampler.stopSampling();
+   }
    public void downloadtest() {
 	new DownloadImage().execute(mURL);
    }
@@ -73,14 +89,15 @@ public class wrappernet {
 
     @Override
     public void onBandwidthStateChange(ConnectionQuality bandwidthState) {
+		//BA.Log("BandwidthStateChanged");
       mConnectionClass = bandwidthState;
-		  if(ba.subExists(wrappernet.eventName + "_state"))
+		  if(ba.subExists(networkclass.eventName + "_state"))
             {
-		ba.raiseEvent(this,wrappernet.eventName + "_state", mConnectionClass.toString());
+		ba.raiseEvent(this,networkclass.eventName + "_state", mConnectionClass.toString());
 			}
 			else
 			{
-				BA.LogError("event sub does not exist: " + wrappernet.eventName);
+				BA.LogError("event sub does not exist: " + networkclass.eventName);
 			}
     }
   }
@@ -93,6 +110,7 @@ public class wrappernet {
     @Override
     protected void onPreExecute() {
       mDeviceBandwidthSampler.startSampling();
+	  //BA.Log("Started Sampling");
     }
 
     @Override
@@ -114,24 +132,24 @@ public class wrappernet {
           input.close();
         }
       } catch (IOException e) {
-		  if(ba.subExists(wrappernet.eventName + "_error"))
+		  if(ba.subExists(networkclass.eventName + "_error"))
             {
-		ba.raiseEvent(this,wrappernet.eventName + "_error", "Image not found");
+		ba.raiseEvent(this,networkclass.eventName + "_error", "Nothing to sample");
 		}
       }
       return null;
     }
-
     @Override
     protected void onPostExecute(Void v) {
+		//BA.Log("Post");
       mDeviceBandwidthSampler.stopSampling();
-      // Retry for up to 10 times until we find a ConnectionClass.
+      //Retry for up to 10 times until we find a ConnectionClass.
       if (mConnectionClass == ConnectionQuality.UNKNOWN && mTries < 10) {
         mTries++;
         new DownloadImage().execute(mURL);
       }
       if (!mDeviceBandwidthSampler.isSampling()) {
-		// BA.Log("Download View Gone Sampling");
+		//BA.Log("Gone");
       }
     }
   }
