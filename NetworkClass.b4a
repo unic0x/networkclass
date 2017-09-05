@@ -1,0 +1,95 @@
+﻿Version=7.28
+NumberOfModules=1
+Module1=Starter
+Build1=Default,b4a.example.ckass
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="19"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~AddPermission(android.permission.INTERNET)~\n~'End of default text.~\n~
+IconFile=
+NumberOfFiles=1
+File1=1.bal
+NumberOfLibraries=4
+Library1=core
+Library2=networkclass
+Library3=httputils2
+Library4=network
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: NetworkClass
+	#VersionCode: 1
+	#VersionName: 
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+End Sub
+
+Sub Globals
+Dim net As networkclass
+	Private Button1 As Button
+	Private Button2 As Button
+	Private Label1 As Label
+	Private Button3 As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("1")
+	net.Initialize("network")
+End Sub
+
+Sub Activity_Resume
+	net.register
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+net.remove
+End Sub
+
+Sub network_state(a As String)
+	ToastMessageShow(a, True)
+End Sub
+	
+Sub Button1_LongClick
+End Sub
+
+Sub Button1_Click
+	'this is a test download sample
+	net.downloadtest
+End Sub
+
+Sub Button2_Click
+	' register listener and start sampling
+	net.register
+	net.startSampling
+	Dim job As HttpJob
+	job.Initialize("j", Me)
+	job.Download("https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg")
+	job.Release
+	
+	
+	
+End Sub
+
+Sub JobDone (job As HttpJob)
+If job.Success Then
+	Dim out As OutputStream = File.OpenOutput(File.DirDefaultExternal, "test.jpg", False)
+	File.Copy2(job.GetInputStream, out)
+	out.Close '<------ very important
+	Log("FILE DOWNLOADED ! ")
+	'stop sampling and after few secs an event is raised in this case a toastmessage
+		net.stopSampling
+Else
+	Log("Error: " & job.ErrorMessage)
+End If
+End Sub
+
+
+'Manaul way to get last reading that was sampled
+Sub Button3_Click
+	net.BandwidthQuality
+End Sub

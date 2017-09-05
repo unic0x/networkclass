@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <doclet-version-NOT-library-version>1.05</doclet-version-NOT-library-version>
+    <class>
+        <name>com.facebook.network.connectionclass.ConnectionClassManager</name>
+        <comment>&lt;p&gt;
+ Class used to calculate the approximate bandwidth of a user's connection.
+ &lt;/p&gt;
+ &lt;p&gt;
+ This class notifies all subscribed {@link ConnectionClassStateChangeListener} with the new
+ ConnectionClass when the network's ConnectionClass changes.
+ &lt;/p&gt;</comment>
+        <owner>process</owner>
+        <method>
+            <name>reset</name>
+            <comment>Resets the bandwidth average for this instance of the bandwidth manager.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>addBandwidth</name>
+            <comment>Adds bandwidth to the current filtered latency counter. Sends a broadcast to all
+ {@link ConnectionClassStateChangeListener} if the counter moves from one bucket
+ to another (i.e. poor bandwidth -&gt; moderate bandwidth).</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>bytes</name>
+                <type>long</type>
+            </parameter>
+            <parameter>
+                <name>timeInMs</name>
+                <type>long</type>
+            </parameter>
+        </method>
+        <method>
+            <name>remove</name>
+            <comment>Method for removing listeners from this class.
+listener: Reference to the {@link ConnectionClassStateChangeListener} to be removed.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>listener</name>
+                <type>com.facebook.network.connectionclass.ConnectionClassManager.ConnectionClassStateChangeListener</type>
+            </parameter>
+        </method>
+        <method>
+            <name>register</name>
+            <comment>Method for adding new listeners to this class.
+listener: {@link ConnectionClassStateChangeListener} to add as a listener.</comment>
+            <returntype EnumType="true">com.facebook.network.connectionclass.ConnectionQuality</returntype>
+            <parameter>
+                <name>listener</name>
+                <type>com.facebook.network.connectionclass.ConnectionClassManager.ConnectionClassStateChangeListener</type>
+            </parameter>
+        </method>
+        <property>
+            <name>Instance</name>
+            <returntype>com.facebook.network.connectionclass.ConnectionClassManager</returntype>
+            <comment>Retrieval method for the DownloadBandwidthManager singleton.</comment>
+        </property>
+        <property>
+            <name>DownloadKBitsPerSecond</name>
+            <returntype>double</returntype>
+            <comment>Accessor method for the current bandwidth average.</comment>
+        </property>
+        <property>
+            <name>CurrentBandwidthQuality</name>
+            <returntype EnumType="true">com.facebook.network.connectionclass.ConnectionQuality</returntype>
+            <comment>Get the ConnectionQuality that the moving bandwidth average currently represents.</comment>
+        </property>
+    </class>
+    <class>
+        <name>com.facebook.network.connectionclass.ConnectionQuality</name>
+        <comment>A general enumeration for different connection qualities.
+
+ &lt;p&gt;
+ In order to compare qualities use the {@link .compareTo()} method. Qualities are ordered in increasing
+ order of declaration as per the java docs for {@link java.lang.Enum}.
+ &lt;/p&gt;</comment>
+        <owner>process</owner>
+        <method>
+            <name>valueOf</name>
+            <comment></comment>
+            <returntype EnumType="true">com.facebook.network.connectionclass.ConnectionQuality</returntype>
+            <parameter>
+                <name>name</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>hashCode</name>
+            <comment></comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>values</name>
+            <comment></comment>
+            <returntype EnumType="true">com.facebook.network.connectionclass.ConnectionQuality[]</returntype>
+        </method>
+        <method>
+            <name>equals</name>
+            <comment></comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>arg0</name>
+                <type>java.lang.Object</type>
+            </parameter>
+        </method>
+        <method>
+            <name>name</name>
+            <comment></comment>
+            <returntype>java.lang.String</returntype>
+        </method>
+        <method>
+            <name>clone</name>
+            <comment></comment>
+            <returntype>java.lang.Object</returntype>
+        </method>
+        <method>
+            <name>toString</name>
+            <comment></comment>
+            <returntype>java.lang.String</returntype>
+        </method>
+        <method>
+            <name>finalize</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>compareTo</name>
+            <comment></comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>arg0</name>
+                <type>E</type>
+            </parameter>
+        </method>
+        <method>
+            <name>ordinal</name>
+            <comment></comment>
+            <returntype>int</returntype>
+        </method>
+        <property>
+            <name>DeclaringClass</name>
+            <returntype>java.lang.Class</returntype>
+            <comment></comment>
+        </property>
+    </class>
+    <class>
+        <name>com.facebook.network.connectionclass.DeviceBandwidthSampler</name>
+        <comment>Class used to read from TrafficStats periodically, in order to determine a ConnectionClass.</comment>
+        <owner>process</owner>
+        <method>
+            <name>addSample</name>
+            <comment>Method for polling for the change in total bytes since last update and
+ adding it to the BandwidthManager.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>addFinalSample</name>
+            <comment>Resets previously read byte count after recording a sample, so that
+ we don't count bytes downloaded in between sampling sessions.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>isSampling</name>
+            <comment>
+Return type: @return:True if there are still threads which are sampling, false otherwise.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>stopSampling</name>
+            <comment>Finish sampling and prevent further changes to the
+ ConnectionClass until another timer is started.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>startSampling</name>
+            <comment>Method call to start sampling for download bandwidth.</comment>
+            <returntype>void</returntype>
+        </method>
+        <property>
+            <name>Instance</name>
+            <returntype>com.facebook.network.connectionclass.DeviceBandwidthSampler</returntype>
+            <comment>Retrieval method for the DeviceBandwidthSampler singleton.</comment>
+        </property>
+    </class>
+    <class>
+        <name>wrappernet.networkclass</name>
+        <shortname>networkclass</shortname>
+        <owner>activity</owner>
+        <event>state (response As String), error (response As String)</event>
+        <permission>android.permission.INTERNET</permission>
+        <method>
+            <name>downloadtest</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>stopSampling</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment></comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>evname</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>startSampling</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>remove</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>BandwidthQuality</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>register</name>
+            <comment>Listener to update the UI upon connectionclass change.</comment>
+            <returntype>void</returntype>
+        </method>
+    </class>
+    <version>0.02</version>
+    <author>NetworkClass wrapped By Jamie John</author>
+    <dependsOn>jsr305-1.3.9</dependsOn>
+</root>
