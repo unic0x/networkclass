@@ -1,4 +1,4 @@
-﻿Version=7.28
+﻿Version=7.3
 NumberOfModules=1
 Module1=Starter
 Build1=Default,b4a.example.ckass
@@ -6,11 +6,10 @@ ManifestCode='This code will be applied to the manifest file during compilation.
 IconFile=
 NumberOfFiles=1
 File1=1.bal
-NumberOfLibraries=4
+NumberOfLibraries=3
 Library1=core
 Library2=networkclass
 Library3=httputils2
-Library4=network
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: NetworkClass
@@ -25,12 +24,15 @@ Library4=network
 	#IncludeTitle: True
 #End Region
 
+#Region Info
+'Jamie John
+#End Region
 Sub Process_Globals
 End Sub
 
 Sub Globals
 Dim net As networkclass
-	Private Button1 As Button
+	Private Button1 As Button 'ignore
 	Private Button2 As Button
 	Private Label1 As Label
 	Private Button3 As Button
@@ -63,16 +65,13 @@ Sub Button1_Click
 End Sub
 
 Sub Button2_Click
-	' register listener and start sampling
+	' register listener and start sampling a large image
 	net.register
 	net.startSampling
 	Dim job As HttpJob
 	job.Initialize("j", Me)
 	job.Download("https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg")
-	job.Release
-	
-	
-	
+	job.Release	
 End Sub
 
 Sub JobDone (job As HttpJob)
