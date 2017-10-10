@@ -24,7 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-@Author("NetworkClass wrapped By Jamie John")
+@Author("NetworkClass wrapped By J")
 @Permissions(values={"android.permission.INTERNET"})
 @Version(0.02f)
 @Events(values={"state (response As String), error (response As String)"})
@@ -40,7 +40,7 @@ public class networkclass {
 	private DeviceBandwidthSampler mDeviceBandwidthSampler;
 	private ConnectionChangedListener mListener;
 
-	private String mURL = "https://get.google.com/apptips/images/google-play.png";
+	private String mURL = "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg";
 	private int mTries = 0;
 	private ConnectionQuality mConnectionClass = ConnectionQuality.UNKNOWN;
   
